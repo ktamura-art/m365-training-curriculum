@@ -108,6 +108,22 @@ td{padding:9px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
 tr:last-child td{border-bottom:0}
 .ag-t{font-weight:600;color:var(--navy)}
 .ag-d{color:var(--gray);font-size:12.5px;margin-top:2px}
+.fnlist{margin-top:7px;display:flex;flex-wrap:wrap;gap:4px}
+.fn{
+  display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:5px;
+  background:#f1f5f9;border:1px solid #e2e8f0;color:#334155;line-height:1.6;
+}
+.fn-lb{font-size:10.5px;font-weight:700;color:#94a3b8;letter-spacing:.05em;margin-right:2px;align-self:center}
+.b-mode{border:1px solid;background:#fff}
+.fnrow{display:flex;gap:12px;align-items:baseline;padding:8px 12px;border-bottom:1px solid var(--line2)}
+.fnrow:last-child{border-bottom:0}
+.fnrow .n{flex:1;font-size:13px;color:var(--navy);min-width:0}
+.fnrow .m{flex:none}
+.fnrow .s{flex:none;font-size:11.5px;color:var(--gray);white-space:nowrap}
+.fnhead{
+  padding:12px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;
+  gap:11px;flex-wrap:wrap;position:sticky;top:0;background:var(--white);z-index:2;
+}
 .num{text-align:right;white-space:nowrap;color:var(--gray);font-variant-numeric:tabular-nums}
 
 .foot-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
@@ -181,12 +197,13 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
       <p class="hd-sub">Power Automate ／ SharePoint リスト ／ Power BI ／ Copilot Studio ／ エージェントビルダー ／ AI Builder</p>
     </div>
     <div class="hd-meta">
-      全8回・2〜3時間／回　　150名・15チーム<br>
-      レベル L1／L2／L3 選択制　　2026年10月開始想定
+      <span id="hd-count">全8回</span>　　2〜3時間／回<br>
+      150名・15チーム　　レベル L1／L2／L3 選択制　　2026年10月開始想定
     </div>
   </div>
   <nav>
     <button class="on" data-p="all">全体カリキュラム</button>
+    <button data-p="fn">機能一覧（網羅チェック）</button>
     <button data-p="tool">ツール別</button>
     <button data-p="level">レベル分け</button>
     <button data-p="want">やりたいこと逆引き</button>
@@ -199,7 +216,7 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
 <!-- ============================ 全体カリキュラム ============================ -->
 <section class="panel on" id="p-all">
   <h2>全体カリキュラム</h2>
-  <p class="lede">各回をクリックすると、その回で扱う項目・所要時間・演習・宿題が開きます。フィルターで「この回・この項目は自分に要るか」を絞り込めます。</p>
+  <p class="lede" id="all-lede"></p>
 
   <div class="bar">
     <div class="bar-g"><span class="bar-lb">レベル</span><div id="f-lv"></div></div>
@@ -213,6 +230,26 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   </div>
 
   <div id="sessions"></div>
+</section>
+
+<!-- ============================ 機能一覧 ============================ -->
+<section class="panel" id="p-fn">
+  <h2>機能一覧（網羅チェック）</h2>
+  <p class="lede">
+    カリキュラムで扱う機能をすべて並べたものです。「この機能は入っているか」をここで確認できます。
+    扱い方は <b>演習</b>（受講者が自分の手で作る）／<b>デモ</b>（講師が実演）／<b>講義</b>（考え方の説明）の3段階で示しています。
+    ここに無い機能でご要望があれば、差し替え・追加いたします。
+  </p>
+
+  <div class="bar">
+    <div class="bar-g"><span class="bar-lb">ツール</span><div id="f2-tool"></div></div>
+    <div class="bar-g"><span class="bar-lb">扱い方</span><div id="f2-mode"></div></div>
+    <div class="bar-g"><input type="search" id="f2-q" placeholder="機能を検索（例：formatDateTime、承認、DAX、ビュー）"></div>
+    <div class="actions"><button class="abtn" onclick="window.print()">印刷</button></div>
+  </div>
+
+  <div id="fncount" style="font-size:12.5px;color:var(--gray);margin-bottom:12px"></div>
+  <div id="fnlist"></div>
 </section>
 
 <!-- ============================ ツール別 ============================ -->
@@ -301,6 +338,7 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   <p class="lede">実施にあたってご確認・ご準備をお願いしたい事項です。</p>
 
   <div class="grid g4" id="ops-stats"></div>
+  <div class="grid g4" id="ops-stats2" style="margin-top:14px"></div>
 
   <div class="sec">
     <h2>チーム編成</h2>
@@ -336,7 +374,7 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
 <script src="data.js"></script>
 <script>
 /* ---------------- state ---------------- */
-const S = { lv:"ALL", tool:"ALL", q:"", feas:"ALL", wq:"" };
+const S = { lv:"ALL", tool:"ALL", q:"", feas:"ALL", wq:"", f2tool:"ALL", f2mode:"ALL", f2q:"" };
 const $ = s => document.querySelector(s);
 const el = (t,c,h) => { const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e; };
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -346,6 +384,15 @@ const toolBadge = k => {
   return `<span class="b b-tool" style="background:${t.color}">${esc(t.name)}</span>`;
 };
 const lvBadge = l => `<span class="b b-lv ${l}">${l}</span>`;
+const modeBadge = m => {
+  const c = (MODES[m]||{}).color || "#94a3b8";
+  return `<span class="b b-mode" style="color:${c};border-color:${c}33" title="${esc((MODES[m]||{}).d||"")}">${esc(m)}</span>`;
+};
+
+/* 全機能をフラット化 */
+const ALLFN = [];
+SESSIONS.forEach(s => s.agenda.forEach(it =>
+  (it.fn||[]).forEach(f => ALLFN.push({ fn:f, tool:it.tool, mode:it.mode, lv:it.lv, no:s.no, item:it.t }))));
 
 /* ---------------- tabs ---------------- */
 document.querySelectorAll("nav button").forEach(b=>{
@@ -380,8 +427,15 @@ function initFilters(){
     [{v:"ALL",l:"すべて"},{v:"A",l:"◎ 作れます",color:FEASIBLE.A.color},
      {v:"B",l:"○ 条件付き",color:FEASIBLE.B.color},{v:"C",l:"△ 要相談",color:FEASIBLE.C.color}],
     "feas", i=>i.l);
-  $("#f-q").oninput = e => { S.q = e.target.value.trim(); renderSessions(); };
+  buildChips($("#f2-tool"),
+    [{v:"ALL",l:"すべて"}].concat(Object.keys(TOOLS).map(k=>({v:k,l:TOOLS[k].name,color:TOOLS[k].color}))),
+    "f2tool", i=>i.l);
+  buildChips($("#f2-mode"),
+    [{v:"ALL",l:"すべて"}].concat(Object.keys(MODES).map(k=>({v:k,l:k,color:MODES[k].color}))),
+    "f2mode", i=>i.l);
+  $("#f-q").oninput  = e => { S.q  = e.target.value.trim(); renderSessions(); };
   $("#f-wq").oninput = e => { S.wq = e.target.value.trim(); renderWants(); };
+  $("#f2-q").oninput = e => { S.f2q = e.target.value.trim(); renderFunctions(); };
 }
 
 /* level inclusion: L1 ⊂ L2 ⊂ L3 */
@@ -389,7 +443,10 @@ const lvRank = { L1:1, L2:2, L3:3 };
 const itemVisible = (it) => {
   if (S.lv !== "ALL" && lvRank[it.lv] > lvRank[S.lv]) return false;
   if (S.tool !== "ALL" && it.tool !== S.tool) return false;
-  if (S.q && !(it.t + it.d).includes(S.q)) return false;
+  if (S.q) {
+    const hay = it.t + it.d + (it.fn||[]).join(" ");
+    if (!hay.toLowerCase().includes(S.q.toLowerCase())) return false;
+  }
   return true;
 };
 
@@ -421,6 +478,7 @@ function renderSessions(){
       </div>
       <div class="ses-r">
         <span>${items.length} 項目</span>
+        <span>${items.reduce((a,b)=>a+(b.fn||[]).length,0)} 機能</span>
         <span>${Math.round(mins/6)/10} 時間</span>
         <span class="caret">▶</span>
       </div>`);
@@ -434,16 +492,22 @@ function renderSessions(){
 
     const tbl = el("table",null,`
       <thead><tr>
-        <th style="width:38%">項目</th><th style="width:150px">ツール</th>
-        <th style="width:58px">レベル</th><th style="width:62px" class="num">目安</th><th>内容</th>
+        <th style="width:26%">項目</th><th style="width:150px">ツール</th>
+        <th style="width:56px">レベル</th><th style="width:56px">扱い方</th>
+        <th style="width:56px" class="num">目安</th><th>内容と、扱う機能</th>
       </tr></thead>
       <tbody>${items.map(i=>`
         <tr>
           <td class="ag-t">${esc(i.t)}</td>
           <td>${toolBadge(i.tool)}</td>
           <td>${lvBadge(i.lv)}</td>
+          <td>${modeBadge(i.mode)}</td>
           <td class="num">${i.min}分</td>
-          <td class="ag-d">${esc(i.d)}</td>
+          <td>
+            <div class="ag-d">${esc(i.d)}</div>
+            ${(i.fn||[]).length ? `<div class="fnlist"><span class="fn-lb">扱う機能</span>${
+              i.fn.map(f=>`<span class="fn">${esc(f)}</span>`).join("")}</div>` : ""}
+          </td>
         </tr>`).join("")}</tbody>`);
     body.appendChild(tbl);
 
@@ -479,20 +543,58 @@ function renderTools(){
       <div style="padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;flex-wrap:wrap">
         <span style="width:9px;height:26px;border-radius:3px;background:${TOOLS[k].color};display:inline-block"></span>
         <b style="font-size:15.5px;color:var(--navy)">${esc(TOOLS[k].name)}</b>
-        <span style="font-size:12px;color:var(--gray)">${rows.length} 項目・約 ${Math.round(mins/6)/10} 時間</span>
+        <span style="font-size:12px;color:var(--gray)">${rows.length} 項目・${rows.reduce((a,r)=>a+(r.i.fn||[]).length,0)} 機能・約 ${Math.round(mins/6)/10} 時間</span>
         <span style="margin-left:auto;display:flex;gap:4px">${ses.map(n=>`<span class="sref">${n}</span>`).join("")}</span>
       </div>
       <table>
-        <thead><tr><th style="width:58px" class="num">回</th><th style="width:34%">項目</th><th style="width:58px">レベル</th><th style="width:62px" class="num">目安</th><th>内容</th></tr></thead>
+        <thead><tr><th style="width:58px" class="num">回</th><th style="width:24%">項目</th><th style="width:56px">レベル</th><th style="width:56px">扱い方</th><th style="width:56px" class="num">目安</th><th>扱う機能</th></tr></thead>
         <tbody>${rows.map(r=>`
           <tr>
             <td class="num">第${r.s.no}回</td>
             <td class="ag-t">${esc(r.i.t)}</td>
             <td>${lvBadge(r.i.lv)}</td>
+            <td>${modeBadge(r.i.mode)}</td>
             <td class="num">${r.i.min}分</td>
-            <td class="ag-d">${esc(r.i.d)}</td>
+            <td><div class="fnlist" style="margin-top:0">${(r.i.fn||[]).map(f=>`<span class="fn">${esc(f)}</span>`).join("")}</div></td>
           </tr>`).join("")}</tbody>
       </table>`;
+    host.appendChild(card);
+  });
+}
+
+/* ---------------- functions (網羅チェック) ---------------- */
+function renderFunctions(){
+  const host = $("#fnlist"); host.innerHTML="";
+  const q = S.f2q.toLowerCase();
+  const rows = ALLFN.filter(r =>
+    (S.f2tool==="ALL" || r.tool===S.f2tool) &&
+    (S.f2mode==="ALL" || r.mode===S.f2mode) &&
+    (!q || (r.fn + r.item).toLowerCase().includes(q)));
+
+  $("#fncount").innerHTML =
+    `全 <b style="color:var(--navy)">${ALLFN.length}</b> 機能のうち <b style="color:var(--navy)">${rows.length}</b> 件を表示`
+    + (rows.length!==ALLFN.length ? "（フィルター適用中）" : "");
+
+  if(!rows.length){ host.appendChild(el("div","card empty","該当する機能がありません。")); return; }
+
+  Object.keys(TOOLS).forEach(k=>{
+    const g = rows.filter(r=>r.tool===k);
+    if(!g.length) return;
+    const card = el("div","card");
+    card.style.marginBottom="16px";
+    card.innerHTML = `
+      <div class="fnhead">
+        <span style="width:9px;height:22px;border-radius:3px;background:${TOOLS[k].color};display:inline-block"></span>
+        <b style="font-size:14.5px;color:var(--navy)">${esc(TOOLS[k].name)}</b>
+        <span style="font-size:12px;color:var(--gray)">${g.length} 機能</span>
+      </div>
+      ${g.map(r=>`
+        <div class="fnrow">
+          <div class="n">${esc(r.fn)}</div>
+          <div class="m">${modeBadge(r.mode)}</div>
+          <div class="m">${lvBadge(r.lv)}</div>
+          <div class="s">第${r.no}回　${esc(r.item)}</div>
+        </div>`).join("")}`;
     host.appendChild(card);
   });
 }
@@ -550,8 +652,18 @@ function renderWants(){
 
 /* ---------------- ops ---------------- */
 function renderOps(){
-  $("#ops-stats").innerHTML = OPS.stats.map(s=>
-    `<div class="stat"><div class="v">${esc(s.v)}<span class="u">${esc(s.u)}</span></div><div class="k">${esc(s.k)}</div></div>`).join("");
+  const nItems = SESSIONS.reduce((a,s)=>a+s.agenda.length,0);
+  const nMin   = SESSIONS.reduce((a,s)=>a+s.agenda.reduce((x,i)=>x+i.min,0),0);
+  const nEx    = ALLFN.filter(r=>r.mode==="演習").length;
+  const stat = (v,u,k)=>`<div class="stat"><div class="v">${v}<span class="u">${u}</span></div><div class="k">${k}</div></div>`;
+
+  $("#ops-stats").innerHTML =
+    stat("150","名","受講対象") + stat("15","チーム","10名以内で編成") +
+    stat("8","回","全体研修（2〜3時間）") + stat(nMin/60,"時間","フルコースの総時間");
+
+  $("#ops-stats2").innerHTML =
+    stat(nItems,"項目","カリキュラムの項目数") + stat(ALLFN.length,"機能","扱う機能の総数") +
+    stat(nEx,"機能","うち受講者が手を動かすもの") + stat(Object.keys(TOOLS).length-1,"ツール","対象製品");
 
   $("#ops-team").innerHTML = OPS.team.map(t=>
     `<div class="card" style="padding:14px 18px">
@@ -580,16 +692,27 @@ function renderOps(){
 }
 
 /* ---------------- boot ---------------- */
-function redraw(){ initFilters(); renderSessions(); renderWants(); }
+function redraw(){ initFilters(); renderSessions(); renderWants(); renderFunctions(); }
 $("#b-open").onclick  = () => document.querySelectorAll(".ses").forEach(n=>n.classList.add("open"));
 $("#b-close").onclick = () => document.querySelectorAll(".ses").forEach(n=>n.classList.remove("open"));
 
 initFilters();
 renderSessions();
+renderFunctions();
 renderTools();
 renderLevels();
 renderWants();
 renderOps();
+
+/* ヘッダーの件数を実データから埋める */
+(function(){
+  const nItems = SESSIONS.reduce((a,s)=>a+s.agenda.length,0);
+  $("#hd-count").textContent =
+    `全8回・${nItems}項目・${ALLFN.length}機能`;
+  $("#all-lede").innerHTML =
+    `全8回・<b>${nItems}項目</b>・<b>${ALLFN.length}機能</b>。各回をクリックすると、扱う機能・所要時間・演習・宿題が開きます。`
+    + `フィルターで「この回・この項目は自分に要るか」を絞り込めます（機能名でも検索できます）。`;
+})();
 </script>
 </body>
 </html>
