@@ -189,7 +189,7 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
       <p class="hd-sub">主軸：Power Automate ／ Power BI　　補足：SharePoint リスト（フローの転記先・Power BI の入力元）　　第7回：AI</p>
     </div>
     <div class="hd-meta">
-      <span id="hd-count">全8回</span>　　2〜3時間／回<br>
+      <span id="hd-count"></span>　　2〜3時間／回<br>
       150名・15チーム　　2026年10月開始想定
     </div>
   </div>
@@ -555,7 +555,7 @@ function renderOps(){
 
   $("#ops-stats").innerHTML =
     stat("150","名","受講対象") + stat("15","チーム","10名以内で編成") +
-    stat("8","回","全体研修（2〜3時間）") + stat(nMin/60,"時間","フルコースの総時間");
+    stat(SESSIONS.length,"回","全体研修（2〜3時間）") + stat(Math.round(nMin/6)/10,"時間","フルコースの総時間");
 
   $("#ops-stats2").innerHTML =
     stat(nItems,"項目","カリキュラムの項目数") + stat(ALLFN.length,"機能","扱う機能の総数") +
@@ -603,9 +603,9 @@ renderOps();
 (function(){
   const nItems = SESSIONS.reduce((a,s)=>a+s.agenda.length,0);
   $("#hd-count").textContent =
-    `全8回・${nItems}項目・${ALLFN.length}機能`;
+    `全${SESSIONS.length}回・${nItems}項目・${ALLFN.length}機能`;
   $("#all-lede").innerHTML =
-    `全8回・<b>${nItems}項目</b>・<b>${ALLFN.length}機能</b>。各回をクリックすると、扱う機能・所要時間・演習・宿題が開きます。`
+    `全${SESSIONS.length}回・<b>${nItems}項目</b>・<b>${ALLFN.length}機能</b>。各回をクリックすると、扱う機能・所要時間・演習・宿題が開きます。`
     + `フィルターで「この回・この項目は自分に要るか」を絞り込めます（機能名でも検索できます）。`;
 })();
 </script>
