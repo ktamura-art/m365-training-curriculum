@@ -82,11 +82,18 @@ input[type=search]:focus{outline:2px solid #bfdbfe;outline-offset:0;border-color
 .ses-h{display:flex;gap:14px;align-items:flex-start;padding:15px 18px;cursor:pointer;background:var(--white);user-select:none}
 .ses-h:hover{background:#fcfdff}
 .ses-no{
-  flex:none;width:44px;height:44px;border-radius:9px;background:var(--navy);color:#fff;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;
+  flex:none;height:32px;padding:0 13px;border-radius:8px;background:var(--navy);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;
+  white-space:nowrap;letter-spacing:.02em;margin-top:2px;
 }
-.ses-no b{font-size:17px;font-weight:700}
-.ses-no span{font-size:9px;opacity:.72;margin-top:2px}
+.ses-no.supp{background:#0d9488}
+.ses.supp .ses-h{background:#f7fdfc}
+.b-supp{background:#0d9488;color:#fff}
+.role{padding:14px 18px}
+.role .rh{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.06em;color:#fff;padding:2px 9px;border-radius:999px;margin-bottom:8px}
+.role b{display:block;font-size:15.5px;color:var(--navy)}
+.role p{margin:4px 0 0;font-size:12.5px;color:var(--gray)}
+.role .rs{margin-top:8px;display:flex;gap:4px;flex-wrap:wrap}
 .ses-b{flex:1;min-width:0}
 .ses-t{font-size:15.5px;font-weight:700;color:var(--navy);margin:0}
 .ses-s{font-size:12.5px;color:var(--gray);margin:2px 0 0}
@@ -135,21 +142,6 @@ tr:last-child td{border-bottom:0}
 .b{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px;letter-spacing:.02em;white-space:nowrap}
 .b-tool{color:#fff}
 .b-lv{border:1px solid var(--line);color:var(--gray);background:var(--white)}
-.b-lv.L1{border-color:#cbd5e1;color:#475569;background:#f8fafc}
-.b-lv.L2{border-color:#bfdbfe;color:#1d4ed8;background:#eff6ff}
-.b-lv.L3{border-color:#cbd5e1;color:#0f172a;background:#f1f5f9}
-
-/* ---------- level cards ---------- */
-.lv{border:1px solid var(--line);border-radius:var(--r);background:var(--white);overflow:hidden;box-shadow:var(--sh)}
-.lv-h{padding:14px 18px;color:#fff}
-.lv-h .n{font-size:16px;font-weight:700}
-.lv-h .w{font-size:12px;opacity:.88;margin-top:2px}
-.lv-b{padding:14px 18px}
-.lv-goal{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:12px;line-height:1.6}
-.lv-ses{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px}
-.dot{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:1px solid var(--line);color:#cbd5e1;background:var(--white)}
-.dot.on{color:#fff;border:0}
-.lv-h-time{font-size:12px;color:var(--gray);border-top:1px solid var(--line2);padding-top:9px}
 
 /* ---------- want list ---------- */
 .want{display:flex;gap:12px;align-items:flex-start;padding:11px 14px;border-bottom:1px solid var(--line2)}
@@ -194,18 +186,16 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   <div class="hd-top">
     <div>
       <h1 class="hd-title">全社内製化プログラム｜カリキュラム管理画面</h1>
-      <p class="hd-sub">Power Automate ／ SharePoint リスト ／ Power BI ／ Copilot Studio ／ エージェントビルダー ／ AI Builder</p>
+      <p class="hd-sub">主軸：Power Automate ／ Power BI　　補足：SharePoint リスト（フローの転記先・Power BI の入力元）　　第7回：AI</p>
     </div>
     <div class="hd-meta">
       <span id="hd-count">全8回</span>　　2〜3時間／回<br>
-      150名・15チーム　　レベル L1／L2／L3 選択制　　2026年10月開始想定
+      150名・15チーム　　2026年10月開始想定
     </div>
   </div>
   <nav>
     <button class="on" data-p="all">全体カリキュラム</button>
     <button data-p="fn">機能一覧（網羅チェック）</button>
-    <button data-p="tool">ツール別</button>
-    <button data-p="level">レベル分け</button>
     <button data-p="want">やりたいこと逆引き</button>
     <button data-p="ops">運営・前提・ライセンス</button>
   </nav>
@@ -218,8 +208,9 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   <h2>全体カリキュラム</h2>
   <p class="lede" id="all-lede"></p>
 
+  <div class="grid g3" id="roles" style="margin-bottom:18px"></div>
+
   <div class="bar">
-    <div class="bar-g"><span class="bar-lb">レベル</span><div id="f-lv"></div></div>
     <div class="bar-g"><span class="bar-lb">ツール</span><div id="f-tool"></div></div>
     <div class="bar-g"><input type="search" id="f-q" placeholder="項目を検索（例：承認、変数、DAX）"></div>
     <div class="actions">
@@ -250,53 +241,6 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
 
   <div id="fncount" style="font-size:12.5px;color:var(--gray);margin-bottom:12px"></div>
   <div id="fnlist"></div>
-</section>
-
-<!-- ============================ ツール別 ============================ -->
-<section class="panel" id="p-tool">
-  <h2>ツール別の扱う内容</h2>
-  <p class="lede">どのツールが、どの回で、どれだけの時間を占めるかを分解したものです。「Power BI だけ受けたい」といったご要望の可否判断にお使いください。</p>
-  <div id="tools"></div>
-</section>
-
-<!-- ============================ レベル分け ============================ -->
-<section class="panel" id="p-level">
-  <h2>レベル分け</h2>
-  <p class="lede">全員がフルコースである必要はありません。役割に応じて3段階からお選びいただけます。部署単位でも、個人単位でも設定できます。</p>
-  <div class="grid g3" id="levels"></div>
-
-  <div class="sec">
-    <h2>どのレベルを選ぶか</h2>
-    <p class="lede">迷った場合の目安です。</p>
-    <div class="card">
-      <table>
-        <thead><tr><th style="width:120px">レベル</th><th style="width:200px">対象</th><th>こういう方に</th><th style="width:130px">回数・時間</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><span class="b b-lv L1">L1 ｜ 知る</span></td>
-            <td>部長・課長／依頼する側</td>
-            <td>自分では作らないが、部下の相談に乗り、何を外注し何を内製するか判断したい方。用語が分かれば十分な方。</td>
-            <td class="num">3回・7.5時間</td>
-          </tr>
-          <tr>
-            <td><span class="b b-lv L2">L2 ｜ 作る</span></td>
-            <td>実務担当者（想定の中心）</td>
-            <td>自分の業務を自分で自動化したい方。第7回の AI 連携までは要らないが、リストと Power BI は使いたい方。</td>
-            <td class="num">7回・19.5時間</td>
-          </tr>
-          <tr>
-            <td><span class="b b-lv L3">L3 ｜ 回す</span></td>
-            <td>チームリーダー・推進担当</td>
-            <td>他人が作ったフローを引き取って直せる必要がある方。AI 連携やライセンスの線引きまで把握しておきたい方。</td>
-            <td class="num">8回・22.5時間</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="note">
-      レベルは開始後の変更も可能です。L1 で参加された方が L2 に上がる場合、第3回からの合流でも支障が出ないよう、第1〜2回の録画をご用意します。
-    </div>
-  </div>
 </section>
 
 <!-- ============================ やりたいこと逆引き ============================ -->
@@ -374,7 +318,7 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
 <script src="data.js"></script>
 <script>
 /* ---------------- state ---------------- */
-const S = { lv:"ALL", tool:"ALL", q:"", feas:"ALL", wq:"", f2tool:"ALL", f2mode:"ALL", f2q:"" };
+const S = { tool:"ALL", q:"", feas:"ALL", wq:"", f2tool:"ALL", f2mode:"ALL", f2q:"" };
 const $ = s => document.querySelector(s);
 const el = (t,c,h) => { const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e; };
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -383,7 +327,6 @@ const toolBadge = k => {
   const t = TOOLS[k];
   return `<span class="b b-tool" style="background:${t.color}">${esc(t.name)}</span>`;
 };
-const lvBadge = l => `<span class="b b-lv ${l}">${l}</span>`;
 const modeBadge = m => {
   const c = (MODES[m]||{}).color || "#94a3b8";
   return `<span class="b b-mode" style="color:${c};border-color:${c}33" title="${esc((MODES[m]||{}).d||"")}">${esc(m)}</span>`;
@@ -392,7 +335,7 @@ const modeBadge = m => {
 /* 全機能をフラット化 */
 const ALLFN = [];
 SESSIONS.forEach(s => s.agenda.forEach(it =>
-  (it.fn||[]).forEach(f => ALLFN.push({ fn:f, tool:it.tool, mode:it.mode, lv:it.lv, no:s.no, item:it.t }))));
+  (it.fn||[]).forEach(f => ALLFN.push({ fn:f, tool:it.tool, mode:it.mode, no:s.no, item:it.t }))));
 
 /* ---------------- tabs ---------------- */
 document.querySelectorAll("nav button").forEach(b=>{
@@ -417,9 +360,6 @@ function buildChips(host, items, key, render){
   });
 }
 function initFilters(){
-  buildChips($("#f-lv"),
-    [{v:"ALL",l:"すべて"},{v:"L1",l:"L1 知る"},{v:"L2",l:"L2 作る"},{v:"L3",l:"L3 回す"}],
-    "lv", i=>i.l);
   buildChips($("#f-tool"),
     [{v:"ALL",l:"すべて"}].concat(Object.keys(TOOLS).map(k=>({v:k,l:TOOLS[k].name,color:TOOLS[k].color}))),
     "tool", i=>i.l);
@@ -438,10 +378,7 @@ function initFilters(){
   $("#f2-q").oninput = e => { S.f2q = e.target.value.trim(); renderFunctions(); };
 }
 
-/* level inclusion: L1 ⊂ L2 ⊂ L3 */
-const lvRank = { L1:1, L2:2, L3:3 };
 const itemVisible = (it) => {
-  if (S.lv !== "ALL" && lvRank[it.lv] > lvRank[S.lv]) return false;
   if (S.tool !== "ALL" && it.tool !== S.tool) return false;
   if (S.q) {
     const hay = it.t + it.d + (it.fn||[]).join(" ");
@@ -459,22 +396,21 @@ function renderSessions(){
 
   SESSIONS.forEach(s=>{
     const items = s.agenda.filter(itemVisible);
-    const inLevel = S.lv==="ALL" || LEVELS[S.lv].sessions.includes(s.no);
-    if (!items.length || !inLevel) return;
+    if (!items.length) return;
     shown++;
 
     const mins = items.reduce((a,b)=>a+b.min,0);
-    const card = el("div","card ses");
+    const card = el("div","card ses"+(s.supp?" supp":""));
     card.dataset.no = s.no;
     if (open.has(String(s.no)) || S.q) card.classList.add("open");
 
     const tools = [...new Set(items.map(i=>i.tool))];
     const head = el("div","ses-h", `
-      <div class="ses-no"><b>${s.no}</b><span>回</span></div>
+      <div class="ses-no${s.supp?" supp":""}">第${s.no}回</div>
       <div class="ses-b">
         <p class="ses-t">${esc(s.title)}</p>
         <p class="ses-s">${esc(s.sub)}</p>
-        <div class="ses-tags">${tools.map(toolBadge).join("")}${lvBadge(s.minLevel)}<span style="font-size:11.5px;color:#94a3b8">最低 ${s.minLevel} から</span></div>
+        <div class="ses-tags">${s.supp?'<span class="b b-supp">補足</span>':''}${tools.map(toolBadge).join("")}</div>
       </div>
       <div class="ses-r">
         <span>${items.length} 項目</span>
@@ -492,15 +428,14 @@ function renderSessions(){
 
     const tbl = el("table",null,`
       <thead><tr>
-        <th style="width:26%">項目</th><th style="width:150px">ツール</th>
-        <th style="width:56px">レベル</th><th style="width:56px">扱い方</th>
+        <th style="width:26%">項目</th><th style="width:170px">ツール</th>
+        <th style="width:56px">扱い方</th>
         <th style="width:56px" class="num">目安</th><th>内容と、扱う機能</th>
       </tr></thead>
       <tbody>${items.map(i=>`
         <tr>
           <td class="ag-t">${esc(i.t)}</td>
           <td>${toolBadge(i.tool)}</td>
-          <td>${lvBadge(i.lv)}</td>
           <td>${modeBadge(i.mode)}</td>
           <td class="num">${i.min}分</td>
           <td>
@@ -527,38 +462,23 @@ function renderSessions(){
   if (!shown) host.appendChild(el("div","card empty","条件に合う項目がありません。フィルターを外してください。"));
 }
 
-/* ---------------- tool breakdown ---------------- */
-function renderTools(){
-  const host = $("#tools"); host.innerHTML="";
-  Object.keys(TOOLS).forEach(k=>{
-    const rows=[];
-    SESSIONS.forEach(s=> s.agenda.forEach(i=>{ if(i.tool===k) rows.push({s,i}); }));
-    if(!rows.length) return;
-    const mins = rows.reduce((a,r)=>a+r.i.min,0);
-    const ses = [...new Set(rows.map(r=>r.s.no))];
-
-    const card = el("div","card");
-    card.style.marginBottom="16px";
-    card.innerHTML = `
-      <div style="padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <span style="width:9px;height:26px;border-radius:3px;background:${TOOLS[k].color};display:inline-block"></span>
-        <b style="font-size:15.5px;color:var(--navy)">${esc(TOOLS[k].name)}</b>
-        <span style="font-size:12px;color:var(--gray)">${rows.length} 項目・${rows.reduce((a,r)=>a+(r.i.fn||[]).length,0)} 機能・約 ${Math.round(mins/6)/10} 時間</span>
-        <span style="margin-left:auto;display:flex;gap:4px">${ses.map(n=>`<span class="sref">${n}</span>`).join("")}</span>
-      </div>
-      <table>
-        <thead><tr><th style="width:58px" class="num">回</th><th style="width:24%">項目</th><th style="width:56px">レベル</th><th style="width:56px">扱い方</th><th style="width:56px" class="num">目安</th><th>扱う機能</th></tr></thead>
-        <tbody>${rows.map(r=>`
-          <tr>
-            <td class="num">第${r.s.no}回</td>
-            <td class="ag-t">${esc(r.i.t)}</td>
-            <td>${lvBadge(r.i.lv)}</td>
-            <td>${modeBadge(r.i.mode)}</td>
-            <td class="num">${r.i.min}分</td>
-            <td><div class="fnlist" style="margin-top:0">${(r.i.fn||[]).map(f=>`<span class="fn">${esc(f)}</span>`).join("")}</div></td>
-          </tr>`).join("")}</tbody>
-      </table>`;
-    host.appendChild(card);
+/* ---------------- 構成（主軸と補足） ---------------- */
+function renderRoles(){
+  const host=$("#roles"); host.innerHTML="";
+  const sesOf = k => [...new Set(SESSIONS.filter(s=>s.agenda.some(i=>i.tool===k)).map(s=>s.no))];
+  const rows=[
+    {k:"PA",  lb:"主軸 ①", d:"決まった手順を自動で流す。本プログラムの中心です。"},
+    {k:"BI",  lb:"主軸 ②", d:"フローが溜めたデータを見える化し、判断に使う。"},
+    {k:"SPL", lb:"補足",   d:"Power Automate の転記先／Power BI の入力元。それに必要な範囲だけ扱います。"},
+  ];
+  rows.forEach(r=>{
+    const T=TOOLS[r.k];
+    host.appendChild(el("div","card role",`
+      <span class="rh" style="background:${T.color}">${r.lb}</span>
+      <b>${esc(T.name.replace("（補足）",""))}</b>
+      <p>${esc(r.d)}</p>
+      <div class="rs"><span style="font-size:11px;color:#94a3b8;align-self:center;margin-right:2px">扱う回</span>${
+        sesOf(r.k).map(n=>`<span class="sref" title="第${n}回">${n}</span>`).join("")}</div>`));
   });
 }
 
@@ -592,33 +512,9 @@ function renderFunctions(){
         <div class="fnrow">
           <div class="n">${esc(r.fn)}</div>
           <div class="m">${modeBadge(r.mode)}</div>
-          <div class="m">${lvBadge(r.lv)}</div>
           <div class="s">第${r.no}回　${esc(r.item)}</div>
         </div>`).join("")}`;
     host.appendChild(card);
-  });
-}
-
-/* ---------------- levels ---------------- */
-function renderLevels(){
-  const host = $("#levels"); host.innerHTML="";
-  Object.keys(LEVELS).forEach(k=>{
-    const L = LEVELS[k];
-    const c = el("div","lv");
-    c.innerHTML = `
-      <div class="lv-h" style="background:${L.color}">
-        <div class="n">${esc(L.name)}</div>
-        <div class="w">${esc(L.who)}</div>
-      </div>
-      <div class="lv-b">
-        <div class="lv-goal">${esc(L.goal)}</div>
-        <div class="lv-ses">${SESSIONS.map(s=>{
-          const on = L.sessions.includes(s.no);
-          return `<span class="dot${on?" on":""}" style="${on?`background:${L.color}`:""}" title="第${s.no}回 ${esc(s.title)}">${s.no}</span>`;
-        }).join("")}</div>
-        <div class="lv-h-time">${esc(L.hours)}　／　受講する回：${L.sessions.map(n=>"第"+n+"回").join("・")}</div>
-      </div>`;
-    host.appendChild(c);
   });
 }
 
@@ -663,7 +559,7 @@ function renderOps(){
 
   $("#ops-stats2").innerHTML =
     stat(nItems,"項目","カリキュラムの項目数") + stat(ALLFN.length,"機能","扱う機能の総数") +
-    stat(nEx,"機能","うち受講者が手を動かすもの") + stat(Object.keys(TOOLS).length-1,"ツール","対象製品");
+    stat(nEx,"機能","うち受講者が手を動かすもの") + stat("2","ツール","主軸：Power Automate・Power BI");
 
   $("#ops-team").innerHTML = OPS.team.map(t=>
     `<div class="card" style="padding:14px 18px">
@@ -697,10 +593,9 @@ $("#b-open").onclick  = () => document.querySelectorAll(".ses").forEach(n=>n.cla
 $("#b-close").onclick = () => document.querySelectorAll(".ses").forEach(n=>n.classList.remove("open"));
 
 initFilters();
+renderRoles();
 renderSessions();
 renderFunctions();
-renderTools();
-renderLevels();
 renderWants();
 renderOps();
 
