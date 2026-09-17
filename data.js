@@ -316,7 +316,7 @@ const SESSIONS = [
 
 /* ============================================================ 第7回 */
 {
-  no: 7, title: "AI を載せる", sub: "AI Builder・エージェントビルダー・Copilot Studio",
+  no: 7, title: "AI機能の連携", sub: "AI Builder・エージェントビルダー・Copilot Studio",
   hours: 3, goal: "AI を使う場面と使わない場面を判断でき、必要なライセンスの境界を説明できる",
   why: "似た名前の機能が並び、ライセンスの出どころが別々です。ここを誤ると費用が跳ねます。",
   agenda: [
