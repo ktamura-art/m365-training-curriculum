@@ -317,7 +317,7 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   ライセンスに関する記載は Microsoft 公式ドキュメント（2026年9月15日確認）に基づく整理であり、御社テナントでの実機確認をもって確定とさせてください。
 </footer>
 
-<script src="data.js?v=202609181044"></script>
+<script src="data.js?v=202609181220"></script>
 <script>
 /* ---------------- state ---------------- */
 const S = { tier:"ALL", tool:"ALL", q:"", feas:"ALL", wq:"", f2tier:"ALL", f2tool:"ALL", f2mode:"ALL", f2q:"" };
@@ -361,7 +361,9 @@ function buildChips(host, items, key, render){
     host.appendChild(c);
   });
 }
-const tierChips = [{v:"ALL",l:"すべて"}].concat(Object.keys(TIERS).map(k=>({v:k,l:k,color:TIERS[k].color})));
+const tierChips = [{v:"ALL",l:"すべて"},
+  {v:"基礎", l:"基礎（全項目）",   color:TIERS["基礎"].color},
+  {v:"上位", l:"上位だけを抽出", color:TIERS["上位"].color}];
 function initFilters(){
   buildChips($("#f-tier"), tierChips, "tier", i=>i.l);
   buildChips($("#f2-tier"), tierChips, "f2tier", i=>i.l);
@@ -386,7 +388,7 @@ function initFilters(){
 const tierBadge = t => { const c=(TIERS[t]||{}).color||"#94a3b8";
   return `<span class="b b-mode" style="color:${c};border-color:${c}55;background:${c}0d" title="${esc((TIERS[t]||{}).d||"")}">${esc(t)}</span>`; };
 const itemVisible = (it) => {
-  if (S.tier !== "ALL" && it.tier !== S.tier) return false;
+  if (S.tier === "上位" && it.tier !== "上位") return false;   // 「基礎」は全項目（基礎＋上位）を表示
   if (S.tool !== "ALL" && it.tool !== S.tool) return false;
   if (S.q) {
     const hay = it.t + it.d + (it.fn||[]).join(" ");
@@ -497,7 +499,7 @@ function renderFunctions(){
   const host = $("#fnlist"); host.innerHTML="";
   const q = S.f2q.toLowerCase();
   const rows = ALLFN.filter(r =>
-    (S.f2tier==="ALL" || r.tier===S.f2tier) &&
+    (S.f2tier!=="上位" || r.tier==="上位") &&
     (S.f2tool==="ALL" || r.tool===S.f2tool) &&
     (S.f2mode==="ALL" || r.mode===S.f2mode) &&
     (!q || (r.fn + r.item).toLowerCase().includes(q)));
@@ -619,7 +621,7 @@ renderOps();
     `全${SESSIONS.length}回・${nItems}項目・${ALLFN.length}機能`;
   $("#all-lede").innerHTML =
     `全${SESSIONS.length}回・<b>${nItems}項目</b>・<b>${ALLFN.length}機能</b>。各回をクリックすると、扱う機能・所要時間・演習・宿題が開きます。`
-    + `「内容」で <b>基礎</b>（全員が押さえる）と <b>上位</b>（作り手・推進担当向け）を分けて表示できます。機能名でも検索できます。`;
+    + `各項目に <b>基礎</b>（全員が押さえる）／<b>上位</b>（作り手・推進担当向け）の印を付けています。「上位だけを抽出」で作り手向けの項目だけを取り出せます。機能名でも検索できます。`;
 })();
 </script>
 </body>
