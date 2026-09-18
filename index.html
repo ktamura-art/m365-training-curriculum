@@ -211,6 +211,7 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   <div class="grid g3" id="roles" style="margin-bottom:18px"></div>
 
   <div class="bar">
+    <div class="bar-g"><span class="bar-lb">内容</span><div id="f-tier"></div></div>
     <div class="bar-g"><span class="bar-lb">ツール</span><div id="f-tool"></div></div>
     <div class="bar-g"><input type="search" id="f-q" placeholder="項目を検索（例：承認、変数、DAX）"></div>
     <div class="actions">
@@ -233,6 +234,7 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   </p>
 
   <div class="bar">
+    <div class="bar-g"><span class="bar-lb">内容</span><div id="f2-tier"></div></div>
     <div class="bar-g"><span class="bar-lb">ツール</span><div id="f2-tool"></div></div>
     <div class="bar-g"><span class="bar-lb">扱い方</span><div id="f2-mode"></div></div>
     <div class="bar-g"><input type="search" id="f2-q" placeholder="機能を検索（例：formatDateTime、承認、DAX、ビュー）"></div>
@@ -315,10 +317,10 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   ライセンスに関する記載は Microsoft 公式ドキュメント（2026年9月15日確認）に基づく整理であり、御社テナントでの実機確認をもって確定とさせてください。
 </footer>
 
-<script src="data.js?v=202609180842"></script>
+<script src="data.js?v=202609181044"></script>
 <script>
 /* ---------------- state ---------------- */
-const S = { tool:"ALL", q:"", feas:"ALL", wq:"", f2tool:"ALL", f2mode:"ALL", f2q:"" };
+const S = { tier:"ALL", tool:"ALL", q:"", feas:"ALL", wq:"", f2tier:"ALL", f2tool:"ALL", f2mode:"ALL", f2q:"" };
 const $ = s => document.querySelector(s);
 const el = (t,c,h) => { const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e; };
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -335,7 +337,7 @@ const modeBadge = m => {
 /* 全機能をフラット化 */
 const ALLFN = [];
 SESSIONS.forEach(s => s.agenda.forEach(it =>
-  (it.fn||[]).forEach(f => ALLFN.push({ fn:f, tool:it.tool, mode:it.mode, no:s.no, item:it.t }))));
+  (it.fn||[]).forEach(f => ALLFN.push({ fn:f, tool:it.tool, mode:it.mode, tier:it.tier, no:s.no, item:it.t }))));
 
 /* ---------------- tabs ---------------- */
 document.querySelectorAll("nav button").forEach(b=>{
@@ -359,7 +361,10 @@ function buildChips(host, items, key, render){
     host.appendChild(c);
   });
 }
+const tierChips = [{v:"ALL",l:"すべて"}].concat(Object.keys(TIERS).map(k=>({v:k,l:k,color:TIERS[k].color})));
 function initFilters(){
+  buildChips($("#f-tier"), tierChips, "tier", i=>i.l);
+  buildChips($("#f2-tier"), tierChips, "f2tier", i=>i.l);
   buildChips($("#f-tool"),
     [{v:"ALL",l:"すべて"}].concat(Object.keys(TOOLS).map(k=>({v:k,l:TOOLS[k].name,color:TOOLS[k].color}))),
     "tool", i=>i.l);
@@ -378,7 +383,10 @@ function initFilters(){
   $("#f2-q").oninput = e => { S.f2q = e.target.value.trim(); renderFunctions(); };
 }
 
+const tierBadge = t => { const c=(TIERS[t]||{}).color||"#94a3b8";
+  return `<span class="b b-mode" style="color:${c};border-color:${c}55;background:${c}0d" title="${esc((TIERS[t]||{}).d||"")}">${esc(t)}</span>`; };
 const itemVisible = (it) => {
+  if (S.tier !== "ALL" && it.tier !== S.tier) return false;
   if (S.tool !== "ALL" && it.tool !== S.tool) return false;
   if (S.q) {
     const hay = it.t + it.d + (it.fn||[]).join(" ");
@@ -413,6 +421,7 @@ function renderSessions(){
         <div class="ses-tags">${s.supp?'<span class="b b-supp">補足</span>':''}${tools.map(toolBadge).join("")}</div>
       </div>
       <div class="ses-r">
+        <span>基礎 ${items.filter(i=>i.tier==="基礎").length}・上位 ${items.filter(i=>i.tier==="上位").length}</span>
         <span>${items.length} 項目</span>
         <span>${items.reduce((a,b)=>a+(b.fn||[]).length,0)} 機能</span>
         <span>${Math.round(mins/6)/10} 時間</span>
@@ -429,13 +438,14 @@ function renderSessions(){
     const tbl = el("table",null,`
       <thead><tr>
         <th style="width:26%">項目</th><th style="width:170px">ツール</th>
-        <th style="width:56px">扱い方</th>
+        <th style="width:56px">内容</th><th style="width:56px">扱い方</th>
         <th style="width:56px" class="num">目安</th><th>内容と、扱う機能</th>
       </tr></thead>
       <tbody>${items.map(i=>`
         <tr>
           <td class="ag-t">${esc(i.t)}</td>
           <td>${toolBadge(i.tool)}</td>
+          <td>${tierBadge(i.tier)}</td>
           <td>${modeBadge(i.mode)}</td>
           <td class="num">${i.min}分</td>
           <td>
@@ -487,6 +497,7 @@ function renderFunctions(){
   const host = $("#fnlist"); host.innerHTML="";
   const q = S.f2q.toLowerCase();
   const rows = ALLFN.filter(r =>
+    (S.f2tier==="ALL" || r.tier===S.f2tier) &&
     (S.f2tool==="ALL" || r.tool===S.f2tool) &&
     (S.f2mode==="ALL" || r.mode===S.f2mode) &&
     (!q || (r.fn + r.item).toLowerCase().includes(q)));
@@ -511,6 +522,7 @@ function renderFunctions(){
       ${g.map(r=>`
         <div class="fnrow">
           <div class="n">${esc(r.fn)}</div>
+          <div class="m">${tierBadge(r.tier)}</div>
           <div class="m">${modeBadge(r.mode)}</div>
           <div class="s">第${r.no}回　${esc(r.item)}</div>
         </div>`).join("")}`;
@@ -559,7 +571,8 @@ function renderOps(){
 
   $("#ops-stats2").innerHTML =
     stat(nItems,"項目","カリキュラムの項目数") + stat(ALLFN.length,"機能","扱う機能の総数") +
-    stat(nEx,"機能","うち受講者が手を動かすもの") + stat("2","ツール","主軸：Power Automate・Power BI");
+    stat(nEx,"機能","うち受講者が手を動かすもの") +
+    stat(ALLFN.filter(r=>r.tier==="基礎").length+" / "+ALLFN.filter(r=>r.tier==="上位").length,"機能","基礎 / 上位の内訳");
 
   $("#ops-team").innerHTML = OPS.team.map(t=>
     `<div class="card" style="padding:14px 18px">
@@ -606,7 +619,7 @@ renderOps();
     `全${SESSIONS.length}回・${nItems}項目・${ALLFN.length}機能`;
   $("#all-lede").innerHTML =
     `全${SESSIONS.length}回・<b>${nItems}項目</b>・<b>${ALLFN.length}機能</b>。各回をクリックすると、扱う機能・所要時間・演習・宿題が開きます。`
-    + `フィルターで「この回・この項目は自分に要るか」を絞り込めます（機能名でも検索できます）。`;
+    + `「内容」で <b>基礎</b>（全員が押さえる）と <b>上位</b>（作り手・推進担当向け）を分けて表示できます。機能名でも検索できます。`;
 })();
 </script>
 </body>
