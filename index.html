@@ -186,7 +186,7 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   <div class="hd-top">
     <div>
       <h1 class="hd-title">全社内製化プログラム｜カリキュラム管理画面</h1>
-      <p class="hd-sub">主軸：Power Automate ／ Power BI　　補足：SharePoint リスト（フローの転記先・Power BI の入力元）　　第7回：AI</p>
+      <p class="hd-sub">主軸：Power Automate ／ Power BI　　補足：SharePoint リスト　　受講者：① 低（全員）／② 中（補講・強化）／③ 高（業務別グループ）</p>
     </div>
     <div class="hd-meta">
       <span id="hd-count"></span>　　2〜3時間／回<br>
@@ -195,6 +195,7 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   </div>
   <nav>
     <button class="on" data-p="all">全体カリキュラム</button>
+    <button data-p="level">レベル分け（低・中・高）</button>
     <button data-p="fn">機能一覧（網羅チェック）</button>
     <button data-p="want">やりたいこと逆引き</button>
     <button data-p="ops">運営・前提・ライセンス</button>
@@ -211,7 +212,7 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   <div class="grid g3" id="roles" style="margin-bottom:18px"></div>
 
   <div class="bar">
-    <div class="bar-g"><span class="bar-lb">内容</span><div id="f-tier"></div></div>
+    <div class="bar-g"><span class="bar-lb">レベル</span><div id="f-tier"></div></div>
     <div class="bar-g"><span class="bar-lb">ツール</span><div id="f-tool"></div></div>
     <div class="bar-g"><input type="search" id="f-q" placeholder="項目を検索（例：承認、変数、DAX）"></div>
     <div class="actions">
@@ -224,6 +225,28 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   <div id="sessions"></div>
 </section>
 
+<!-- ============================ レベル分け ============================ -->
+<section class="panel" id="p-level">
+  <h2>レベル分け（低・中・高）</h2>
+  <p class="lede">受講者の目標レベルを3段階に分け、人選は御社で行っていただきます。低レベルは第1回・第2回、中レベルはこれまでの研修の補講・強化、高レベルは対象業務に応じてグループを分けて実施します。</p>
+  <div class="grid g3" id="levels"></div>
+
+  <div class="sec">
+    <h2>高レベルのグループ分け（対象業務別）</h2>
+    <p class="lede">高レベルは、やりたい業務自動化の種類ごとに3グループに分け、それぞれ専用の回（第8〜10回）を設けます。第3・4・5・7回の「高」の項目は3グループ共通です。</p>
+    <div class="grid g3" id="groups"></div>
+  </div>
+
+  <div class="sec">
+    <h2>回とレベルの対応</h2>
+    <div class="card"><table>
+      <thead><tr><th style="width:90px">回</th><th>タイトル</th><th style="width:80px" class="num">低</th><th style="width:80px" class="num">中</th><th style="width:80px" class="num">高</th><th style="width:90px" class="num">時間</th></tr></thead>
+      <tbody id="lvmatrix"></tbody>
+    </table></div>
+    <div class="note">数字は各回に含まれる項目数です。1つの回に中と高の項目が混ざる回（第3〜5回）は、前半＝中、後半＝高の順で進めます。</div>
+  </div>
+</section>
+
 <!-- ============================ 機能一覧 ============================ -->
 <section class="panel" id="p-fn">
   <h2>機能一覧（網羅チェック）</h2>
@@ -234,7 +257,7 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   </p>
 
   <div class="bar">
-    <div class="bar-g"><span class="bar-lb">内容</span><div id="f2-tier"></div></div>
+    <div class="bar-g"><span class="bar-lb">レベル</span><div id="f2-tier"></div></div>
     <div class="bar-g"><span class="bar-lb">ツール</span><div id="f2-tool"></div></div>
     <div class="bar-g"><span class="bar-lb">扱い方</span><div id="f2-mode"></div></div>
     <div class="bar-g"><input type="search" id="f2-q" placeholder="機能を検索（例：formatDateTime、承認、DAX、ビュー）"></div>
@@ -317,7 +340,7 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   ライセンスに関する記載は Microsoft 公式ドキュメント（2026年9月15日確認）に基づく整理であり、御社テナントでの実機確認をもって確定とさせてください。
 </footer>
 
-<script src="data.js?v=202609181641"></script>
+<script src="data.js?v=202609220939"></script>
 <script>
 /* ---------------- state ---------------- */
 const S = { tier:"ALL", tool:"ALL", q:"", feas:"ALL", wq:"", f2tier:"ALL", f2tool:"ALL", f2mode:"ALL", f2q:"" };
@@ -337,7 +360,7 @@ const modeBadge = m => {
 /* 全機能をフラット化 */
 const ALLFN = [];
 SESSIONS.forEach(s => s.agenda.forEach(it =>
-  (it.fn||[]).forEach(f => ALLFN.push({ fn:f, tool:it.tool, mode:it.mode, tier:it.tier, no:s.no, item:it.t }))));
+  (it.fn||[]).forEach(f => ALLFN.push({ fn:f, tool:it.tool, mode:it.mode, lv:it.lv, no:s.no, item:it.t }))));
 
 /* ---------------- tabs ---------------- */
 document.querySelectorAll("nav button").forEach(b=>{
@@ -361,9 +384,7 @@ function buildChips(host, items, key, render){
     host.appendChild(c);
   });
 }
-const tierChips = [{v:"ALL",l:"すべて"},
-  {v:"基礎", l:"基礎（全員・全項目）",     color:TIERS["基礎"].color},
-  {v:"応用", l:"応用（選定者）だけを抽出", color:TIERS["応用"].color}];
+const tierChips = [{v:"ALL",l:"すべて"}].concat(Object.keys(LEVELS).map(k=>({v:k, l:LEVELS[k].name, color:LEVELS[k].color})));
 function initFilters(){
   buildChips($("#f-tier"), tierChips, "tier", i=>i.l);
   buildChips($("#f2-tier"), tierChips, "f2tier", i=>i.l);
@@ -385,10 +406,11 @@ function initFilters(){
   $("#f2-q").oninput = e => { S.f2q = e.target.value.trim(); renderFunctions(); };
 }
 
-const tierBadge = t => { const c=(TIERS[t]||{}).color||"#94a3b8";
-  return `<span class="b b-mode" style="color:${c};border-color:${c}55;background:${c}0d" title="${esc((TIERS[t]||{}).d||"")}">${esc(t)}</span>`; };
+const tierBadge = t => { const c=(LEVELS[t]||{}).color||"#94a3b8";
+  return `<span class="b b-mode" style="color:${c};border-color:${c}55;background:${c}0d" title="${esc((LEVELS[t]||{}).goal||"")}">${esc(t)}</span>`; };
+const groupBadge = g => { const G=GROUPS.find(x=>x.id===g); return G?`<span class="b b-tool" style="background:${G.color}">グループ${G.id}　${esc(G.name)}</span>`:""; };
 const itemVisible = (it) => {
-  if (S.tier === "応用" && it.tier !== "応用") return false;   // 「基礎」は全項目（基礎＋応用）を表示
+  if (S.tier !== "ALL" && it.lv !== S.tier) return false;
   if (S.tool !== "ALL" && it.tool !== S.tool) return false;
   if (S.q) {
     const hay = it.t + it.d + (it.fn||[]).join(" ");
@@ -420,10 +442,10 @@ function renderSessions(){
       <div class="ses-b">
         <p class="ses-t">${esc(s.title)}</p>
         <p class="ses-s">${esc(s.sub)}</p>
-        <div class="ses-tags">${s.supp?'<span class="b b-supp">補足</span>':''}${tools.map(toolBadge).join("")}</div>
+        <div class="ses-tags">${s.supp?'<span class="b b-supp">補足</span>':''}${s.group?groupBadge(s.group):""}${tools.map(toolBadge).join("")}</div>
       </div>
       <div class="ses-r">
-        <span>基礎 ${items.filter(i=>i.tier==="基礎").length}・応用 ${items.filter(i=>i.tier==="応用").length}</span>
+        <span>${["低","中","高"].map(k=>{const n=items.filter(i=>i.lv===k).length;return n?k+" "+n:"";}).filter(Boolean).join("・")}</span>
         <span>${items.length} 項目</span>
         <span>${items.reduce((a,b)=>a+(b.fn||[]).length,0)} 機能</span>
         <span>${Math.round(mins/6)/10} 時間</span>
@@ -440,14 +462,14 @@ function renderSessions(){
     const tbl = el("table",null,`
       <thead><tr>
         <th style="width:26%">項目</th><th style="width:170px">ツール</th>
-        <th style="width:56px">内容</th><th style="width:56px">扱い方</th>
+        <th style="width:56px">レベル</th><th style="width:56px">扱い方</th>
         <th style="width:56px" class="num">目安</th><th>内容と、扱う機能</th>
       </tr></thead>
       <tbody>${items.map(i=>`
         <tr>
           <td class="ag-t">${esc(i.t)}</td>
           <td>${toolBadge(i.tool)}</td>
-          <td>${tierBadge(i.tier)}</td>
+          <td>${tierBadge(i.lv)}</td>
           <td>${modeBadge(i.mode)}</td>
           <td class="num">${i.min}分</td>
           <td>
@@ -494,12 +516,57 @@ function renderRoles(){
   });
 }
 
+/* ---------------- levels ---------------- */
+function renderLevels(){
+  const host=$("#levels"); host.innerHTML="";
+  Object.keys(LEVELS).forEach(k=>{
+    const L=LEVELS[k];
+    const items=SESSIONS.flatMap(s=>s.agenda.filter(i=>i.lv===k));
+    const mins=items.reduce((a,i)=>a+i.min,0);
+    host.appendChild(el("div","card",`
+      <div style="padding:14px 18px;color:#fff;background:${L.color}">
+        <div style="font-size:16px;font-weight:700">${esc(L.name)}</div>
+        <div style="font-size:12px;opacity:.9;margin-top:2px">${esc(L.who)}</div>
+      </div>
+      <div style="padding:14px 18px">
+        <div style="font-size:13.5px;font-weight:700;color:var(--navy);line-height:1.6">${esc(L.goal)}</div>
+        <div style="font-size:12.5px;color:var(--gray);margin-top:6px">例：${esc(L.ex)}</div>
+        <div class="lv-ses" style="display:flex;gap:5px;flex-wrap:wrap;margin-top:12px">${SESSIONS.map(s=>{
+          const on=L.sessions.includes(s.no);
+          return `<span class="sref" style="${on?`background:${L.color}`:"background:#fff;color:#cbd5e1;border:1px solid var(--line)"}" title="第${s.no}回 ${esc(s.title)}">${s.no}</span>`;}).join("")}</div>
+        <div style="font-size:12px;color:var(--gray);border-top:1px solid var(--line2);padding-top:9px;margin-top:10px">
+          ${items.length} 項目・${items.reduce((a,i)=>a+(i.fn||[]).length,0)} 機能・約 ${Math.round(mins/6)/10} 時間　／　受講する回：${L.sessions.map(n=>"第"+n+"回").join("・")}</div>
+      </div>`));
+  });
+  const gh=$("#groups"); gh.innerHTML="";
+  GROUPS.forEach(G=>{
+    const s=SESSIONS.find(x=>x.no===G.session);
+    gh.appendChild(el("div","card",`
+      <div style="padding:12px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px">
+        <span class="b b-tool" style="background:${G.color}">グループ${G.id}</span>
+        <b style="font-size:15px;color:var(--navy)">${esc(G.name)}</b></div>
+      <div style="padding:14px 18px">
+        <div style="font-size:13px;color:var(--ink)">${esc(G.ex)}</div>
+        <div style="font-size:12.5px;color:var(--gray);margin-top:8px">専用の回：<b style="color:var(--navy)">第${G.session}回 ${esc(s?s.title.replace(/^高レベル グループ[A-C]：/,""):"")}</b>（${s?Math.round(s.agenda.reduce((a,i)=>a+i.min,0)/6)/10:""} 時間）</div>
+        <div style="font-size:12.5px;color:var(--gray);margin-top:4px">共通の回：第3・4・5・7回の「高」項目</div>
+        <div class="note" style="margin-top:10px;padding:8px 11px;font-size:12px"><b>必要なもの：</b>${esc(G.need)}</div>
+      </div>`));
+  });
+  const mx=$("#lvmatrix");
+  mx.innerHTML = SESSIONS.map(s=>{
+    const c=k=>s.agenda.filter(i=>i.lv===k).length;
+    const mins=s.agenda.reduce((a,i)=>a+i.min,0);
+    return `<tr><td class="num">第${s.no}回</td><td class="ag-t">${esc(s.title)}${s.group?" "+groupBadge(s.group):""}</td>
+      <td class="num">${c("低")||"—"}</td><td class="num">${c("中")||"—"}</td><td class="num">${c("高")||"—"}</td>
+      <td class="num">${Math.round(mins/6)/10} h</td></tr>`;}).join("");
+}
+
 /* ---------------- functions (網羅チェック) ---------------- */
 function renderFunctions(){
   const host = $("#fnlist"); host.innerHTML="";
   const q = S.f2q.toLowerCase();
   const rows = ALLFN.filter(r =>
-    (S.f2tier!=="応用" || r.tier==="応用") &&
+    (S.f2tier==="ALL" || r.lv===S.f2tier) &&
     (S.f2tool==="ALL" || r.tool===S.f2tool) &&
     (S.f2mode==="ALL" || r.mode===S.f2mode) &&
     (!q || (r.fn + r.item).toLowerCase().includes(q)));
@@ -524,7 +591,7 @@ function renderFunctions(){
       ${g.map(r=>`
         <div class="fnrow">
           <div class="n">${esc(r.fn)}</div>
-          <div class="m">${tierBadge(r.tier)}</div>
+          <div class="m">${tierBadge(r.lv)}</div>
           <div class="m">${modeBadge(r.mode)}</div>
           <div class="s">第${r.no}回　${esc(r.item)}</div>
         </div>`).join("")}`;
@@ -574,7 +641,7 @@ function renderOps(){
   $("#ops-stats2").innerHTML =
     stat(nItems,"項目","カリキュラムの項目数") + stat(ALLFN.length,"機能","扱う機能の総数") +
     stat(nEx,"機能","うち受講者が手を動かすもの") +
-    stat(ALLFN.filter(r=>r.tier==="基礎").length+" / "+ALLFN.filter(r=>r.tier==="応用").length,"機能","基礎 / 応用の内訳");
+    stat(["低","中","高"].map(k=>ALLFN.filter(r=>r.lv===k).length).join(" / "),"機能","低 / 中 / 高の内訳");
 
   $("#ops-team").innerHTML = OPS.team.map(t=>
     `<div class="card" style="padding:14px 18px">
@@ -609,6 +676,7 @@ $("#b-close").onclick = () => document.querySelectorAll(".ses").forEach(n=>n.cla
 
 initFilters();
 renderRoles();
+renderLevels();
 renderSessions();
 renderFunctions();
 renderWants();
@@ -621,7 +689,7 @@ renderOps();
     `全${SESSIONS.length}回・${nItems}項目・${ALLFN.length}機能`;
   $("#all-lede").innerHTML =
     `全${SESSIONS.length}回・<b>${nItems}項目</b>・<b>${ALLFN.length}機能</b>。各回をクリックすると、扱う機能・所要時間・演習・宿題が開きます。`
-    + `各項目に <b>基礎</b>（全員が受講）／<b>応用</b>（選定された対象者が受講）の印を付けています。「応用だけを抽出」で応用の項目だけを取り出せます。機能名でも検索できます。`;
+    + `各項目に <b>低</b>（全員）／<b>中</b>（補講・強化）／<b>高</b>（業務別グループ）の印を付けています。「レベル」で絞ると、そのレベルの人が受ける項目だけが出ます。機能名でも検索できます。`;
 })();
 </script>
 </body>
