@@ -395,7 +395,7 @@ const SESSIONS = [
 },
 
 
-/* ============================================================ 第8回（高・グループA） */
+/* ============================================================ 第8回（上級・グループA） */
 {
   no: 8, title: "上級 グループA：問合せ対応 AI", sub: "AI エージェントを活用した問合せ対応", group: "A",
   hours: 3, goal: "自部署の問合せ業務を、SharePoint の文書を知識源にしたエージェントで一次対応できる形にする",
@@ -425,7 +425,7 @@ const SESSIONS = [
   license: true,
 },
 
-/* ============================================================ 第9回（高・グループB） */
+/* ============================================================ 第9回（上級・グループB） */
 {
   no: 9, title: "上級 グループB：複数システム連携", sub: "複数システムを連携した業務自動化", group: "B",
   hours: 3, goal: "SharePoint・Excel・基幹システム・他社 SaaS をまたいだ処理を、1本のフローでつなげられる",
@@ -455,7 +455,7 @@ const SESSIONS = [
   license: true,
 },
 
-/* ============================================================ 第10回（高・グループC） */
+/* ============================================================ 第10回（上級・グループC） */
 {
   no: 10, title: "上級 グループC：RPA × Power Automate", sub: "RPA・Power Automate を組み合わせた業務プロセス自動化", group: "C",
   hours: 3, goal: "API の無い画面操作をデスクトップ フローで自動化し、クラウド フローから呼び出して一連の業務にできる",
@@ -562,9 +562,9 @@ const OPS = {
     { f: "オンプレミス データ ゲートウェイ", use: "第6回（該当者のみ）", need: "Power Automate Premium 等", add: "要確認", tone: "warn" },
     { f: "AI Builder（要約・分類・抽出・OCR）", use: "第7回のみ", need: "クレジットの手当てが必要", add: "あり", tone: "ng" },
     { f: "エージェントビルダー", use: "第7回", need: "Microsoft 365 Copilot の有無で範囲が変わる", add: "要確認", tone: "warn" },
-    { f: "Copilot Studio のエージェント／エージェント フロー", use: "第7回・第8回（高・グループA）", need: "Copilot Credits（Power Automate とは別勘定）", add: "あり", tone: "ng" },
-    { f: "HTTP・カスタム コネクタ・他社 SaaS（プレミアム コネクタ）", use: "第9回（高・グループB）", need: "Power Automate Premium（ユーザー単位）", add: "あり", tone: "ng" },
-    { f: "デスクトップ フロー（RPA）", use: "第10回（高・グループC）", need: "Power Automate Premium（有人）／Process（無人）", add: "あり", tone: "ng" },
+    { f: "Copilot Studio のエージェント／エージェント フロー", use: "第7回・第8回（上級・グループA）", need: "Copilot Credits（Power Automate とは別勘定）", add: "あり", tone: "ng" },
+    { f: "HTTP・カスタム コネクタ・他社 SaaS（プレミアム コネクタ）", use: "第9回（上級・グループB）", need: "Power Automate Premium（ユーザー単位）", add: "あり", tone: "ng" },
+    { f: "デスクトップ フロー（RPA）", use: "第10回（上級・グループC）", need: "Power Automate Premium（有人）／Process（無人）", add: "あり", tone: "ng" },
   ],
   licenseNote:
     "AI Builder と Copilot Studio は Power Automate とは課金の出どころが別です。また 2026年11月1日以降、新規・更新のライセンスには AI Builder クレジットが付属しません（同日より前の契約は契約期間終了まで有効）。第7回の実施方式は、御社の契約更新時期を確認したうえで決定させてください。",
