@@ -57,7 +57,7 @@ const LEVELS = {
    1,
    2
   ],
-  "color": "#64748b",
+  "color": "#5F6B7A",
   "n": 282
  },
  "中級": {
@@ -71,7 +71,7 @@ const LEVELS = {
    5,
    6
   ],
-  "color": "#2563eb",
+  "color": "#2563EB",
   "n": 35
  },
  "上級": {
@@ -88,7 +88,7 @@ const LEVELS = {
    9,
    10
   ],
-  "color": "#7c3aed",
+  "color": "#E8590C",
   "n": 47
  }
 };
@@ -98,7 +98,7 @@ const GROUPS = [
   "name": "問合せ対応 AI",
   "ex": "AI エージェントを活用した問合せ対応",
   "session": 8,
-  "color": "#7c3aed",
+  "color": "#0A3D91",
   "need": "Copilot Studio のクレジット（Copilot Credits）。Microsoft 365 とは別の課金"
  },
  {
@@ -106,7 +106,7 @@ const GROUPS = [
   "name": "複数システム連携",
   "ex": "複数システムを連携した業務自動化",
   "session": 9,
-  "color": "#0f766e",
+  "color": "#217A3C",
   "need": "HTTP・カスタム コネクタ・他社 SaaS はプレミアム コネクタ。Power Automate Premium（ユーザー単位）が必要"
  },
  {
@@ -114,7 +114,7 @@ const GROUPS = [
   "name": "RPA × Power Automate",
   "ex": "RPA・Power Automate を組み合わせた業務プロセス自動化",
   "session": 10,
-  "color": "#b45309",
+  "color": "#038387",
   "need": "デスクトップ フロー（RPA）は Power Automate Premium（有人）または Process（無人）が必要"
  }
 ];
