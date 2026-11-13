@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
-<title>全社内製化プログラム｜カリキュラム管理画面</title>
+<title>Power Automate・Power BI コーチング｜カリキュラム・チーム分け・スケジュール</title>
 <style>
 :root{
   --navy:#0f172a; --ink:#1e293b; --gray:#64748b; --line:#e2e8f0; --line2:#f1f5f9;
@@ -178,6 +178,35 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   body{background:#fff;font-size:11px}
   .card,.stat,.lv{box-shadow:none}
 }
+.ses-no small{display:block;font-size:10.5px;font-weight:600;opacity:.85;line-height:1.2}
+.ses-no.has-date{height:auto;padding:5px 11px;flex-direction:column;line-height:1.25}
+.ses-when{font-size:12px;color:var(--navy);margin:4px 0 0}
+.ses-when b{font-weight:700}
+tr.self td{background:#f8fafc}
+tr.self .ag-t{color:var(--gray)}
+.b-self{background:#fff;color:#64748b;border:1px dashed #94a3b8}
+.flow{display:flex;gap:6px;flex-wrap:wrap}
+.flow .st{flex:1 1 150px;border-radius:9px;padding:10px 12px;color:#fff;min-width:140px}
+.flow .st b{display:block;font-size:13.5px}
+.flow .st span{font-size:11.5px;opacity:.92}
+.who{display:inline-block;font-size:11px;font-weight:700;border-radius:5px;padding:1px 7px;border:1px solid}
+.who-両社{color:#0f172a;border-color:#cbd5e1;background:#fff}
+.who-御社{color:#b45309;border-color:#fcd34d;background:#fffbeb}
+.who-当社{color:#1d4ed8;border-color:#bfdbfe;background:#eff6ff}
+.st-確定{color:#059669;font-weight:700;font-size:12px}
+.st-予定{color:#64748b;font-size:12px}
+.st-休み{color:#94a3b8;font-size:12px}
+tr.lec td{background:#f8fbff}
+tr.rest td{color:#94a3b8;background:#fafafa}
+.han{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:7px;padding:3px 8px;margin:2px 4px 2px 0;font-size:12px;background:#fff}
+.han b{color:var(--navy)}
+.leader{display:inline-block;border:1px dashed #cbd5e1;border-radius:6px;padding:3px 9px;font-size:11.5px;color:#94a3b8}
+.mem{width:100%;font-size:12.5px}
+.mem td{padding:5px 10px}
+details.sho{margin-top:8px}
+details.sho summary{cursor:pointer;font-size:12.5px;color:var(--gray)}
+.sho-list{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;color:var(--ink);padding:8px 2px}
+@media print{nav,.bar{display:none}.panel{display:block!important;page-break-before:always}}
 </style>
 </head>
 <body>
@@ -185,16 +214,18 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
 <header>
   <div class="hd-top">
     <div>
-      <h1 class="hd-title">全社内製化プログラム｜カリキュラム管理画面</h1>
-      <p class="hd-sub">主軸：Power Automate ／ Power BI　　補足：SharePoint リスト　　受講者：① 初級（全員）／② 中級（補講・強化）／③ 上級（業務別グループ）</p>
+      <h1 class="hd-title">Power Automate・Power BI コーチング｜カリキュラム・チーム分け・スケジュール</h1>
+      <p class="hd-sub">主軸：Power Automate ／ Power BI　　補足：SharePoint リスト　　受講者：① 初級 282名（全員）／② 中級 35名／③ 上級 47名（業務別グループ）</p>
     </div>
     <div class="hd-meta">
-      <span id="hd-count"></span>　　2〜3時間／回<br>
-      150名・15チーム　　2026年10月開始想定
+      <span id="hd-count"></span>　　水曜 13:00〜14:30（90分）<br>
+      364名・10チーム　　2026年12月2日開始
     </div>
   </div>
   <nav>
     <button class="on" data-p="all">全体カリキュラム</button>
+    <button data-p="sched">今後のスケジュール</button>
+    <button data-p="team">チーム分け</button>
     <button data-p="level">レベル分け（初級・中級・上級）</button>
     <button data-p="fn">機能一覧（網羅チェック）</button>
     <button data-p="want">やりたいこと逆引き</button>
@@ -301,6 +332,45 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
   </div>
 </section>
 
+<!-- ============================ 今後のスケジュール ============================ -->
+<section class="panel" id="p-sched">
+  <h2>今後のスケジュール</h2>
+  <p class="lede">第1〜10回は水曜 13:00〜14:30（90分）で確定しています。御社にご準備いただくものは、使う回の前の金曜日を期日にしています。</p>
+  <div class="flow" id="sched-flow"></div>
+  <div class="sec" style="margin-top:22px">
+    <div class="bar" style="margin-bottom:12px">
+      <div class="bar-g"><span class="bar-lb">担当</span><div id="f-who"></div></div>
+    </div>
+    <div class="card"><table>
+      <thead><tr><th style="width:170px">日付</th><th style="width:64px">担当</th><th>内容</th><th style="width:64px">状況</th></tr></thead>
+      <tbody id="sched"></tbody>
+    </table></div>
+  </div>
+  <div class="sec">
+    <h2>事前打ち合わせ（11月16日）で決めること</h2>
+    <div class="grid g2" id="decide"></div>
+  </div>
+</section>
+
+<!-- ============================ チーム分け ============================ -->
+<section class="panel" id="p-team">
+  <h2>チーム分け（案）</h2>
+  <p class="lede">受講者名簿（364名）の部門ごとに10チームに分けた案です。中級・上級の方は、演習のために10名以内の班（11班）に分けます。チームリーダーは御社でご指名ください。</p>
+  <div class="grid g4" id="team-stats"></div>
+  <div class="sec" style="margin-top:22px">
+    <div class="card"><table>
+      <thead><tr><th>チーム（部門）</th><th class="num" style="width:58px">初級</th><th class="num" style="width:58px">中級</th><th class="num" style="width:58px">上級</th><th class="num" style="width:58px">計</th><th style="width:38%">演習の班（中級・上級）</th><th style="width:150px">チームリーダー</th></tr></thead>
+      <tbody id="teams"></tbody>
+    </table></div>
+    <div class="note" id="team-note" style="margin-top:12px"></div>
+  </div>
+  <div class="sec" id="team-detail-sec">
+    <h2>班ごとのメンバー</h2>
+    <p class="lede" id="team-detail-lede"></p>
+    <div id="team-detail"></div>
+  </div>
+</section>
+
 <!-- ============================ 運営 ============================ -->
 <section class="panel" id="p-ops">
   <h2>運営・前提・ライセンス</h2>
@@ -336,11 +406,11 @@ footer{max-width:1400px;margin:0 auto;padding:0 28px 40px;color:#94a3b8;font-siz
 </main>
 
 <footer>
-  本資料はカリキュラムの検討用です。内容・回数・時間配分は、ご要望に応じて調整いたします。<br>
+  本資料は実施計画の検討用です。内容・時間配分・チーム分けは、事前打ち合わせでのご意見を反映し、実施計画書で確定いたします。<br>
   ライセンスに関する記載は Microsoft 公式ドキュメント（2026年9月15日確認）に基づく整理であり、御社テナントでの実機確認をもって確定とさせてください。
 </footer>
 
-<script src="data.js?v=202609282107"></script>
+<script src="data.js?v=202611131800"></script>
 <script>
 /* ---------------- state ---------------- */
 const S = { tier:"ALL", tool:"ALL", q:"", feas:"ALL", wq:"", f2tier:"ALL", f2tool:"ALL", f2mode:"ALL", f2q:"" };
@@ -360,7 +430,8 @@ const modeBadge = m => {
 /* 全機能をフラット化 */
 const ALLFN = [];
 SESSIONS.forEach(s => s.agenda.forEach(it =>
-  (it.fn||[]).forEach(f => ALLFN.push({ fn:f, tool:it.tool, mode:it.mode, lv:it.lv, no:s.no, item:it.t }))));
+  (it.fn||[]).forEach(f => ALLFN.push({ fn:f, tool:it.tool, mode:it.self?"教材":it.mode, lv:it.lv, no:s.no, item:it.t, self:!!it.self }))));
+MODES["教材"] = { color:"#94a3b8", d:"教材でお配りし、質問会で補います" };
 
 /* ---------------- tabs ---------------- */
 document.querySelectorAll("nav button").forEach(b=>{
@@ -431,24 +502,25 @@ function renderSessions(){
     if (!items.length) return;
     shown++;
 
-    const mins = items.reduce((a,b)=>a+b.min,0);
+    const mins = items.reduce((a,b)=>a+(b.self?0:b.min),0);
     const card = el("div","card ses"+(s.supp?" supp":""));
     card.dataset.no = s.no;
     if (open.has(String(s.no)) || S.q) card.classList.add("open");
 
     const tools = [...new Set(items.map(i=>i.tool))];
     const head = el("div","ses-h", `
-      <div class="ses-no${s.supp?" supp":""}">第${s.no}回</div>
+      <div class="ses-no has-date${s.supp?" supp":""}">第${s.no}回<small>${esc(s.dateLabel.replace(/（.）/,""))}</small></div>
       <div class="ses-b">
         <p class="ses-t">${esc(s.title)}</p>
         <p class="ses-s">${esc(s.sub)}</p>
+        <p class="ses-when"><b>${esc(s.dateLabel)} ${esc(s.time)}</b>　対象：${esc(s.who)}</p>
         <div class="ses-tags">${s.supp?'<span class="b b-supp">補足</span>':''}${s.group?groupBadge(s.group):""}${tools.map(toolBadge).join("")}</div>
       </div>
       <div class="ses-r">
         <span>${["初級","中級","上級"].map(k=>{const n=items.filter(i=>i.lv===k).length;return n?k+" "+n:"";}).filter(Boolean).join("・")}</span>
-        <span>${items.length} 項目</span>
+        <span>${items.filter(i=>!i.self).length} 項目</span>
         <span>${items.reduce((a,b)=>a+(b.fn||[]).length,0)} 機能</span>
-        <span>${Math.round(mins/6)/10} 時間</span>
+        <span>${mins} 分</span>
         <span class="caret">▶</span>
       </div>`);
     head.onclick = () => card.classList.toggle("open");
@@ -466,12 +538,12 @@ function renderSessions(){
         <th style="width:56px" class="num">目安</th><th>内容と、扱う機能</th>
       </tr></thead>
       <tbody>${items.map(i=>`
-        <tr>
+        <tr class="${i.self?"self":""}">
           <td class="ag-t">${esc(i.t)}</td>
           <td>${toolBadge(i.tool)}</td>
           <td>${tierBadge(i.lv)}</td>
           <td>${modeBadge(i.mode)}</td>
-          <td class="num">${i.min}分</td>
+          <td class="num">${i.self?'<span class="b b-self">教材</span>':i.min+"分"}</td>
           <td>
             <div class="ag-d">${esc(i.d)}</div>
             ${(i.fn||[]).length ? `<div class="fnlist"><span class="fn-lb">扱う機能</span>${
@@ -481,6 +553,10 @@ function renderSessions(){
     body.appendChild(tbl);
 
     const foot = el("div","foot-row");
+    foot.appendChild(el("div","foot-box",
+      `<div class="lb" style="color:#0f766e">質問</div><div class="tx">${esc(s.qa)}</div>`));
+    if (items.some(i=>i.self)) foot.appendChild(el("div","foot-box",
+      `<div class="lb" style="color:#64748b">教材で扱う項目</div><div class="tx">「教材」の項目は、90分の講義に入りきらないため教材でお配りし、質問会で補います（${items.filter(i=>i.self).map(i=>esc(i.t)).join("・")}）</div>`));
     if (s.homework) foot.appendChild(el("div","foot-box",
       `<div class="lb">宿題</div><div class="tx">${esc(s.homework)}</div>`));
     if (s.kpi) foot.appendChild(el("div","foot-box",
@@ -535,7 +611,7 @@ function renderLevels(){
           const on=L.sessions.includes(s.no);
           return `<span class="sref" style="${on?`background:${L.color}`:"background:#fff;color:#cbd5e1;border:1px solid var(--line)"}" title="第${s.no}回 ${esc(s.title)}">${s.no}</span>`;}).join("")}</div>
         <div style="font-size:12px;color:var(--gray);border-top:1px solid var(--line2);padding-top:9px;margin-top:10px">
-          ${items.length} 項目・${items.reduce((a,i)=>a+(i.fn||[]).length,0)} 機能・約 ${Math.round(mins/6)/10} 時間　／　受講する回：${L.sessions.map(n=>"第"+n+"回").join("・")}</div>
+          ${items.filter(i=>!i.self).length} 項目（講義）・${items.reduce((a,i)=>a+(i.fn||[]).length,0)} 機能　／　受講する回：${L.sessions.map(n=>"第"+n+"回").join("・")}${k==="上級"?"（第8〜10回はグループの回のみ）":""}</div>
       </div>`));
   });
   const gh=$("#groups"); gh.innerHTML="";
@@ -547,7 +623,7 @@ function renderLevels(){
         <b style="font-size:15px;color:var(--navy)">${esc(G.name)}</b></div>
       <div style="padding:14px 18px">
         <div style="font-size:13px;color:var(--ink)">${esc(G.ex)}</div>
-        <div style="font-size:12.5px;color:var(--gray);margin-top:8px">専用の回：<b style="color:var(--navy)">第${G.session}回 ${esc(s?s.title.replace(/^上級 グループ[A-C]：/,""):"")}</b>（${s?Math.round(s.agenda.reduce((a,i)=>a+i.min,0)/6)/10:""} 時間）</div>
+        <div style="font-size:12.5px;color:var(--gray);margin-top:8px">専用の回：<b style="color:var(--navy)">第${G.session}回 ${esc(s?s.title.replace(/^上級 グループ[A-C]：/,""):"")}</b>（${s?esc(s.dateLabel):""} ${s?esc(s.time):""}）</div>
         <div style="font-size:12.5px;color:var(--gray);margin-top:4px">共通の回：第3・4・5・7回の「上級」項目</div>
         <div class="note" style="margin-top:10px;padding:8px 11px;font-size:12px"><b>必要なもの：</b>${esc(G.need)}</div>
       </div>`));
@@ -558,7 +634,7 @@ function renderLevels(){
     const mins=s.agenda.reduce((a,i)=>a+i.min,0);
     return `<tr><td class="num">第${s.no}回</td><td class="ag-t">${esc(s.title)}${s.group?" "+groupBadge(s.group):""}</td>
       <td class="num">${c("初級")||"—"}</td><td class="num">${c("中級")||"—"}</td><td class="num">${c("上級")||"—"}</td>
-      <td class="num">${Math.round(mins/6)/10} h</td></tr>`;}).join("");
+      <td class="num">${esc(s.dateLabel)}</td></tr>`;}).join("");
 }
 
 /* ---------------- functions (網羅チェック) ---------------- */
@@ -635,11 +711,11 @@ function renderOps(){
   const stat = (v,u,k)=>`<div class="stat"><div class="v">${v}<span class="u">${u}</span></div><div class="k">${k}</div></div>`;
 
   $("#ops-stats").innerHTML =
-    stat("150","名","受講対象") + stat("15","チーム","10名以内で編成") +
-    stat(SESSIONS.length,"回","全体研修（2〜3時間）") + stat(Math.round(nMin/6)/10,"時間","フルコースの総時間");
+    stat("364","名","受講者（初級282・中級35・上級47）") + stat("10","チーム","部門ごと（演習は11班）") +
+    stat(SESSIONS.length,"回","水曜 13:00〜14:30（90分）") + stat(Math.round(nMin/6)/10,"時間","講義の総時間（全10回）");
 
   $("#ops-stats2").innerHTML =
-    stat(nItems,"項目","カリキュラムの項目数") + stat(ALLFN.length,"機能","扱う機能の総数") +
+    stat(SESSIONS.reduce((a,s)=>a+s.agenda.filter(i=>!i.self).length,0),"項目","講義で扱う項目（ほかに教材 "+SESSIONS.reduce((a,s)=>a+s.agenda.filter(i=>i.self).length,0)+"）") + stat(ALLFN.length,"機能","扱う機能の総数") +
     stat(nEx,"機能","うち受講者が手を動かすもの") +
     stat(["初級","中級","上級"].map(k=>ALLFN.filter(r=>r.lv===k).length).join(" / "),"機能","初級 / 中級 / 上級の内訳");
 
@@ -669,8 +745,72 @@ function renderOps(){
          <td class="ag-t">${esc(k.target)}</td></tr>`).join("");
 }
 
+/* ---------------- スケジュール ---------------- */
+S.who = "ALL";
+function renderSchedule(){
+  const flow=[
+    {c:"#64748b",t:"初級",d:"第1・2回　12月2日・9日"},
+    {c:"#2563eb",t:"中級（上級も第3〜5回）",d:"第3〜6回　12月16日〜1月13日"},
+    {c:"#7c3aed",t:"上級",d:"第7〜10回　1月20日〜2月10日"},
+    {c:"#0f766e",t:"実務テーマ3件の伴走",d:"2月中旬〜3月12日（稼働まで）"},
+    {c:"#b45309",t:"効果測定・最終のご報告",d:"3月15日〜24日"},
+  ];
+  $("#sched-flow").innerHTML = flow.map(f=>`<div class="st" style="background:${f.c}"><b>${esc(f.t)}</b><span>${esc(f.d)}</span></div>`).join("");
+  buildChips($("#f-who"), [{v:"ALL",l:"すべて"},{v:"講義",l:"講義の回"},{v:"御社",l:"御社にご準備いただくこと",color:"#b45309"},{v:"当社",l:"当社が行うこと",color:"#1d4ed8"}], "who", i=>i.l);
+  const rows = SCHEDULE.filter(r => S.who==="ALL" || (S.who==="講義" ? !!r.s : r.who===S.who));
+  $("#sched").innerHTML = rows.map(r=>`
+    <tr class="${r.s?"lec":""}${r.st==="休み"?" rest":""}">
+      <td class="ag-t" style="white-space:nowrap">${esc(r.lb)}</td>
+      <td>${r.who?`<span class="who who-${esc(r.who)}">${esc(r.who)}</span>`:""}</td>
+      <td><div class="ag-t">${esc(r.t)}</div>${r.n?`<div class="ag-d">${esc(r.n)}</div>`:""}</td>
+      <td class="st-${esc(r.st)}">${esc(r.st)}</td>
+    </tr>`).join("");
+  $("#decide").innerHTML = DECIDE.map((x,i)=>`<div class="card" style="padding:14px 18px">
+    <b style="font-size:14px;color:var(--navy)">${i+1}. ${esc(x.t)}</b>
+    <div style="font-size:12.5px;color:var(--gray);margin-top:4px">${esc(x.d)}</div></div>`).join("");
+}
+
+/* ---------------- チーム分け ---------------- */
+function renderTeams(){
+  const HAS = typeof NAMES !== "undefined";
+  const nHan = TEAMS.reduce((a,t)=>a+t.han.length,0);
+  const stat = (v,u,k)=>`<div class="stat"><div class="v">${v}<span class="u">${u}</span></div><div class="k">${k}</div></div>`;
+  $("#team-stats").innerHTML =
+    stat(TEAMS.length,"チーム","部門ごと") + stat(nHan,"班","演習用（中級・上級・10名以内）") +
+    stat(TEAMS.reduce((a,t)=>a+t.chu+t.jo,0),"名","中級・上級（演習に参加）") + stat(TEAMS.reduce((a,t)=>a+t.sho,0),"名","初級のみ（全社講義で受講）");
+  $("#teams").innerHTML = TEAMS.map(t=>`
+    <tr>
+      <td class="ag-t">${esc(t.label)}</td>
+      <td class="num">${t.sho||"—"}</td><td class="num">${t.chu||"—"}</td><td class="num">${t.jo||"—"}</td>
+      <td class="num"><b style="color:var(--navy)">${t.n}</b></td>
+      <td>${t.han.length?t.han.map(h=>`<span class="han"><b>${esc(h.no?h.no+" "+h.label:"1班")}</b>${h.n}名（中級${h.chu}・上級${h.jo}）</span>`).join(""):'<span class="ag-d">中級・上級の方はいません（初級の全社講義のみ）</span>'}</td>
+      <td><span class="leader">御社でご指名</span></td>
+    </tr>`).join("");
+  $("#team-note").innerHTML = "班の分け方は所属（拠点・課）をもとにした案です。人数の多い部門（営業・業務・技術・WPS）は2班に分けています。上級の方は、このほかに第8〜10回でグループA・B・Cに分かれます（1月15日までに御社でご決定）。";
+  if(!HAS){
+    $("#team-detail-lede").textContent = "氏名入りの班の一覧は、別途お送りするファイルでご確認ください。";
+    $("#team-detail").innerHTML = "";
+    return;
+  }
+  $("#team-detail-lede").textContent = "中級・上級の方を班ごとに並べています（上級を先に表示）。初級の方は、部門ごとに折りたたんで載せています。";
+  $("#team-detail").innerHTML = TEAMS.map(t=>{
+    const hs = t.han.map(h=>`
+      <div style="margin-top:10px">
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px">${esc(t.label)}　${esc(h.no?h.no+" "+h.label:"")}（${h.n}名）</div>
+        <table class="mem"><thead><tr><th style="width:150px">氏名</th><th style="width:60px">レベル</th><th style="width:110px">会社</th><th>所属</th></tr></thead>
+        <tbody>${(NAMES[h.id]||[]).map(m=>`<tr><td class="ag-t">${esc(m.name)}</td><td>${tierBadge(m.lv)}</td><td class="ag-d">${esc(m.co)}</td><td class="ag-d">${esc(m.dept||"")}</td></tr>`).join("")}</tbody></table>
+      </div>`).join("");
+    const sh = NAMES[t.g+"_shokyu"]||[];
+    return `<div class="card" style="padding:14px 18px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:10px"><b style="font-size:15px;color:var(--navy)">${esc(t.label)}</b>
+      <span style="font-size:12px;color:var(--gray)">計${t.n}名（初級${t.sho}・中級${t.chu}・上級${t.jo}）</span></div>
+      ${hs}
+      ${sh.length?`<details class="sho"><summary>初級の方（${sh.length}名）を表示</summary><div class="sho-list">${sh.map(m=>`<span title="${esc(m.co+" "+(m.dept||""))}">${esc(m.name)}</span>`).join("")}</div></details>`:""}
+    </div>`;}).join("");
+}
+
 /* ---------------- boot ---------------- */
-function redraw(){ initFilters(); renderSessions(); renderWants(); renderFunctions(); }
+function redraw(){ initFilters(); renderSessions(); renderWants(); renderFunctions(); renderSchedule(); }
 $("#b-open").onclick  = () => document.querySelectorAll(".ses").forEach(n=>n.classList.add("open"));
 $("#b-close").onclick = () => document.querySelectorAll(".ses").forEach(n=>n.classList.remove("open"));
 
@@ -681,6 +821,8 @@ renderSessions();
 renderFunctions();
 renderWants();
 renderOps();
+renderSchedule();
+renderTeams();
 
 /* ヘッダーの件数を実データから埋める */
 (function(){
@@ -688,7 +830,7 @@ renderOps();
   $("#hd-count").textContent =
     `全${SESSIONS.length}回・${nItems}項目・${ALLFN.length}機能`;
   $("#all-lede").innerHTML =
-    `全${SESSIONS.length}回・<b>${nItems}項目</b>・<b>${ALLFN.length}機能</b>。各回をクリックすると、扱う機能・所要時間・演習・宿題が開きます。`
+    `全${SESSIONS.length}回（各90分）・<b>${nItems}項目</b>・<b>${ALLFN.length}機能</b>。各回をクリックすると、扱う機能・時間配分・演習・宿題が開きます。90分に入りきらない項目は「教材」としてお配りし、質問会で補います。`
     + `各項目に <b>初級</b>（全員）／<b>中級</b>（補講・強化）／<b>上級</b>（業務別グループ）の印を付けています。「レベル」で絞ると、そのレベルの人が受ける項目だけが出ます。機能名でも検索できます。`;
 })();
 </script>
