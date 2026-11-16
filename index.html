@@ -200,6 +200,7 @@ tr.lec td{background:#f8fbff}
 tr.rest td{color:#94a3b8;background:#fafafa}
 .han{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:7px;padding:3px 8px;margin:2px 4px 2px 0;font-size:12px;background:#fff}
 .han b{color:var(--navy)}
+.chn{display:inline-block;font-size:12px;font-weight:700;color:#1d4ed8;background:#eff6ff;border:1px solid #bfdbfe;border-radius:5px;padding:1px 8px;white-space:nowrap}
 .leader{display:inline-block;border:1px dashed #cbd5e1;border-radius:6px;padding:3px 9px;font-size:11.5px;color:#94a3b8}
 .mem{width:100%;font-size:12.5px}
 .mem td{padding:5px 10px}
@@ -457,7 +458,7 @@ footer .ft-c{display:block;margin-top:8px;color:#fff;font-weight:700;letter-spac
   <div class="grid g4" id="team-stats"></div>
   <div class="sec" style="margin-top:22px">
     <div class="card"><table>
-      <thead><tr><th>チーム（部門）</th><th class="num" style="width:58px">初級</th><th class="num" style="width:58px">中級</th><th class="num" style="width:58px">上級</th><th class="num" style="width:58px">計</th><th style="width:38%">演習の班（中級・上級）</th><th style="width:150px">チームリーダー</th></tr></thead>
+      <thead><tr><th>チーム（部門）</th><th style="width:170px">Teams のチャネル</th><th class="num" style="width:58px">初級</th><th class="num" style="width:58px">中級</th><th class="num" style="width:58px">上級</th><th class="num" style="width:58px">計</th><th style="width:38%">演習の班（中級・上級）</th><th style="width:150px">チームリーダー</th></tr></thead>
       <tbody id="teams"></tbody>
     </table></div>
     <div class="note" id="team-note" style="margin-top:12px"></div>
@@ -884,12 +885,13 @@ function renderTeams(){
   $("#teams").innerHTML = TEAMS.map(t=>`
     <tr>
       <td class="ag-t">${esc(t.label)}</td>
+      <td><span class="chn">${esc(t.ch)}</span></td>
       <td class="num">${t.sho||"—"}</td><td class="num">${t.chu||"—"}</td><td class="num">${t.jo||"—"}</td>
       <td class="num"><b style="color:var(--navy)">${t.n}</b></td>
       <td>${t.han.length?t.han.map(h=>`<span class="han"><b>${esc(h.no?h.no+" "+h.label:"1班")}</b>${h.n}名（中級${h.chu}・上級${h.jo}）</span>`).join(""):'<span class="ag-d">中級・上級の方はいません（初級の全社講義のみ）</span>'}</td>
       <td><span class="leader">御社でご指名</span></td>
     </tr>`).join("");
-  $("#team-note").innerHTML = "班の分け方は所属（拠点・課）をもとにした案です。人数の多い部門（営業・業務・技術・WPS）は2班に分けています。上級の方は、このほかに第8〜10回でグループA・B・Cに分かれます（1月15日までに御社でご決定）。";
+  $("#team-note").innerHTML = "Teams のチャネルは、部門ごとの標準チャネル（部門_○○）のほかに、全員の「一般」「質問」、プライベートの「中級・上級」「上級」、1月15日のグループ分け後の「上級A_問合せ対応AI」「上級B_複数システム連携」「上級C_RPA」を用意します。班の分け方は所属（拠点・課）をもとにした案です。人数の多い部門（営業・業務・技術・WPS）は2班に分けています。上級の方は、このほかに第8〜10回でグループA・B・Cに分かれます（1月15日までに御社でご決定）。";
   if(!HAS){
     $("#team-detail-lede").textContent = "氏名入りの班の一覧は、別途お送りするファイルでご確認ください。";
     $("#team-detail").innerHTML = "";
@@ -906,7 +908,7 @@ function renderTeams(){
     const sh = NAMES[t.g+"_shokyu"]||[];
     return `<div class="card" style="padding:14px 18px;margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:10px"><b style="font-size:15px;color:var(--navy)">${esc(t.label)}</b>
-      <span style="font-size:12px;color:var(--gray)">計${t.n}名（初級${t.sho}・中級${t.chu}・上級${t.jo}）</span></div>
+      <span class="chn">${esc(t.ch)}</span><span style="font-size:12px;color:var(--gray)">計${t.n}名（初級${t.sho}・中級${t.chu}・上級${t.jo}）</span></div>
       ${hs}
       ${sh.length?`<details class="sho"><summary>初級の方（${sh.length}名）を表示</summary><div class="sho-list">${sh.map(m=>`<span title="${esc(m.co+" "+(m.dept||""))}">${esc(m.name)}</span>`).join("")}</div></details>`:""}
     </div>`;}).join("");
