@@ -207,6 +207,16 @@ tr.rest td{color:#94a3b8;background:#fafafa}
 details.sho{margin-top:8px}
 details.sho summary{cursor:pointer;font-size:12.5px;color:var(--gray)}
 .sho-list{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;color:var(--ink);padding:8px 2px}
+.hw-box{flex:1 1 100%!important;border-color:#fdba74!important;background:#fffaf5!important}
+.hw-box .lb{color:#c2410c!important}
+.hw-due{display:inline-block;margin-left:8px;font-size:11px;font-weight:700;color:#fff;background:#E8590C;border-radius:4px;padding:1px 7px;letter-spacing:0}
+.hw-it{display:flex;gap:10px;margin-top:8px;align-items:flex-start}
+.hw-n{flex:0 0 auto;font-size:11px;font-weight:700;color:#c2410c;border:1px solid #fdba74;background:#fff;border-radius:4px;padding:1px 6px;margin-top:1px}
+.hw-t{font-size:13px;font-weight:700;color:var(--navy)}
+.hw-min{font-size:11px;font-weight:400;color:var(--gray);margin-left:8px}
+.hw-d{font-size:12.5px;color:var(--ink);margin-top:2px}
+.hw-ft{margin-top:9px;padding-top:7px;border-top:1px dashed #fdba74;font-size:12px;color:var(--ink);line-height:1.7}
+.hw-ft b{display:inline-block;font-size:11px;color:#c2410c;margin-right:8px}
 @media print{nav,.bar{display:none}.panel{display:block!important;page-break-before:always}}
 /* ===================== DigiRise トンマナ（theme_v5） ===================== */
 :root{
@@ -661,7 +671,11 @@ function renderSessions(){
       `<div class="lb" style="color:#0f766e">質問</div><div class="tx">${esc(s.qa)}</div>`));
     if (items.some(i=>i.self)) foot.appendChild(el("div","foot-box",
       `<div class="lb" style="color:#64748b">教材で扱う項目</div><div class="tx">「教材」の項目は、90分の講義に入りきらないため教材でお配りし、質問会で補います（${items.filter(i=>i.self).map(i=>esc(i.t)).join("・")}）</div>`));
-    if (s.homework) foot.appendChild(el("div","foot-box",
+    if (s.hw) foot.appendChild(el("div","foot-box hw-box",
+      `<div class="lb">宿題<span class="hw-due">${esc(s.hw.due)}</span></div>` +
+      s.hw.items.map(h=>`<div class="hw-it"><span class="hw-n">${esc(h.n)}</span><div><div class="hw-t">${esc(h.t)}<span class="hw-min">${esc(h.min)}</span></div><div class="hw-d">${esc(h.d)}</div></div></div>`).join("") +
+      `<div class="hw-ft"><b>出し方</b>${esc(s.hw.post)}<br><b>作り方</b>${esc(s.hw.guide)}</div>`));
+    else if (s.homework) foot.appendChild(el("div","foot-box",
       `<div class="lb">宿題</div><div class="tx">${esc(s.homework)}</div>`));
     if (s.kpi) foot.appendChild(el("div","foot-box",
       `<div class="lb" style="color:#2563eb">この回の到達指標</div><div class="tx">${esc(s.kpi)}</div>`));
